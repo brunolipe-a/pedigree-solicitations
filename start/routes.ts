@@ -21,5 +21,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.post('/login', 'SessionsController.login')
+Route.post('/register', 'SessionsController.register')
 
 Route.get('/health', () => ({ health: 'ok' }))
