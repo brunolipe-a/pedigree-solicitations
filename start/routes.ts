@@ -18,9 +18,22 @@
 |
 */
 
+import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.post('/login', 'SessionsController.login')
-Route.post('/register', 'SessionsController.register')
+import './routes/api'
 
-Route.get('/health', () => ({ health: 'ok' }))
+Route.get('health', async ({ response }) => {
+  const report = await HealthCheck.getReport()
+
+  return report.healthy ? response.ok(report) : response.badRequest(report)
+})
+
+Route.get('/', () => ({ server: 'Pedigree Certificate' }))
+
+Route.group(() => {
+  Route.post('login', 'SessionsController.login').as('login')
+  Route.post('register', 'SessionsController.register').as('register')
+})
+  .as('v1')
+  .prefix('v1')

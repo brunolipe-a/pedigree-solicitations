@@ -11,6 +11,7 @@ export default class RegisterUserValidator {
       rules.unique({ column: 'email', table: 'users' }),
       rules.maxLength(255),
     ]),
+    roleId: schema.number([rules.exists({ column: 'id', table: 'roles' })]),
     password: schema.string([rules.confirmed(), rules.maxLength(180), rules.minLength(8)]),
   })
 
