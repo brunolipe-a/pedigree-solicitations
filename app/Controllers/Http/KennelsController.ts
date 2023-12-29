@@ -5,13 +5,17 @@ import StoreKennelValidator from 'App/Validators/StoreKennelValidator'
 import UpdateKennelValidator from 'App/Validators/UpdateKennelValidator'
 
 export default class KennelsController {
-  public async index({}: HttpContextContract) {
+  public async index({ bouncer }: HttpContextContract) {
+    await bouncer.with('KennelPolicy').authorize('viewList')
+
     const kennels = await Kennel.all()
 
     return kennels
   }
 
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request, response, bouncer }: HttpContextContract) {
+    await bouncer.with('KennelPolicy').authorize('create')
+
     const { name, registerCode } = await request.validate(StoreKennelValidator)
 
     const kennel = await Kennel.create({ name, registerCode })
@@ -20,12 +24,16 @@ export default class KennelsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, kennel: Kennel) {
+  public async show({ bouncer }: HttpContextContract, kennel: Kennel) {
+    await bouncer.with('KennelPolicy').authorize('view', kennel)
+
     return kennel
   }
 
   @bind()
-  public async update({ request }: HttpContextContract, kennel: Kennel) {
+  public async update({ request, bouncer }: HttpContextContract, kennel: Kennel) {
+    await bouncer.with('KennelPolicy').authorize('update', kennel)
+
     const data = await request.validate(UpdateKennelValidator)
 
     const updatedKennel = await kennel.merge(data).save()
@@ -34,7 +42,9 @@ export default class KennelsController {
   }
 
   @bind()
-  public async destroy({ response }: HttpContextContract, kennel: Kennel) {
+  public async destroy({ response, bouncer }: HttpContextContract, kennel: Kennel) {
+    await bouncer.with('KennelPolicy').authorize('delete', kennel)
+
     await kennel.delete()
 
     return response.noContent()

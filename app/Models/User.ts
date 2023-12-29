@@ -11,7 +11,7 @@ import {
   manyToMany,
   ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
-import Role from './Role'
+import Role, { RoleId } from './Role'
 import Client from './Client'
 import Kennel from './Kennel'
 
@@ -38,7 +38,7 @@ export default class User extends BaseModel {
   public updatedAt: DateTime
 
   @column()
-  public roleId: number
+  public roleId: RoleId
 
   @belongsTo(() => Role)
   public role: BelongsTo<typeof Role>

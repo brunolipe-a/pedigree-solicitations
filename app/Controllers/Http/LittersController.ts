@@ -6,13 +6,17 @@ import StoreLitterValidator from 'App/Validators/StoreLitterValidator'
 import UpdateLitterValidator from 'App/Validators/UpdateLitterValidator'
 
 export default class LittersController {
-  public async index({}: HttpContextContract) {
+  public async index({ bouncer }: HttpContextContract) {
+    await bouncer.with('LitterPolicy').authorize('viewList')
+
     const litters = await Litter.all()
 
     return litters
   }
 
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request, response, bouncer }: HttpContextContract) {
+    await bouncer.with('LitterPolicy').authorize('create')
+
     const data = await request.validate(StoreLitterValidator)
 
     const litter = await Litter.create(data)
@@ -21,12 +25,16 @@ export default class LittersController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, litter: Litter) {
+  public async show({ bouncer }: HttpContextContract, litter: Litter) {
+    await bouncer.with('LitterPolicy').authorize('view', litter)
+
     return litter
   }
 
   @bind()
-  public async update({ request }: HttpContextContract, litter: Litter) {
+  public async update({ request, bouncer }: HttpContextContract, litter: Litter) {
+    await bouncer.with('LitterPolicy').authorize('update', litter)
+
     const data = await request.validate(UpdateLitterValidator)
 
     const updatedLitter = await litter.merge(data).save()
@@ -35,7 +43,9 @@ export default class LittersController {
   }
 
   @bind()
-  public async destroy({ response }: HttpContextContract, litter: Litter) {
+  public async destroy({ response, bouncer }: HttpContextContract, litter: Litter) {
+    await bouncer.with('LitterPolicy').authorize('delete', litter)
+
     await litter.delete()
 
     return response.noContent()

@@ -1,7 +1,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-  Route.get('/', () => ({ message: 'OK' })).as('home')
+  Route.get('/me', 'SessionsController.me').as('me')
   Route.resource('kennels', 'KennelsController').apiOnly().paramFor('kennels', 'kennel')
   Route.resource('kennels.users', 'KennelUsersController')
     .only(['store'])

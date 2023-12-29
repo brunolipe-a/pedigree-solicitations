@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export enum RoleLabel {
+export enum RoleId {
   SUPER_ADMIN = 'super_admin',
   CLIENT = 'client',
   KENNEL_ADMIN = 'kennel_admin',
@@ -10,7 +10,7 @@ export enum RoleLabel {
 
 export default class Role extends BaseModel {
   @column({ isPrimary: true })
-  public id: RoleLabel
+  public id: RoleId
 
   @column()
   public description: string

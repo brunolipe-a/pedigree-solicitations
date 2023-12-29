@@ -32,7 +32,8 @@
       "@adonisjs/lucid",
       "@adonisjs/auth",
       "@adonisjs/redis",
-      "@adonisjs/route-model-binding/build/adonis-typings"
+      "@adonisjs/route-model-binding/build/adonis-typings",
+      "@adonisjs/bouncer"
     ]
   }
 }

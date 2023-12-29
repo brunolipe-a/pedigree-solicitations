@@ -1,5 +1,6 @@
 import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { RoleId } from 'App/Models/Role'
 
 export default class RegisterUserValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -11,7 +12,9 @@ export default class RegisterUserValidator {
       rules.unique({ column: 'email', table: 'users' }),
       rules.maxLength(255),
     ]),
-    roleId: schema.number([rules.exists({ column: 'id', table: 'roles' })]),
+    cpf: schema.string([rules.maxLength(255), rules.unique({ column: 'cpf', table: 'clients' })]),
+    phone: schema.string([rules.maxLength(255)]),
+    roleId: schema.enum(Object.values(RoleId)),
     password: schema.string([rules.confirmed(), rules.maxLength(180), rules.minLength(8)]),
   })
 
