@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Dog from './Dog'
 
 export default class Litter extends BaseModel {
@@ -16,7 +16,7 @@ export default class Litter extends BaseModel {
   public description: string | null
 
   @column.dateTime()
-  public birth_at: DateTime
+  public birthAt: DateTime
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -24,9 +24,12 @@ export default class Litter extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @belongsTo(() => Dog)
+  @belongsTo(() => Dog, { foreignKey: 'mother_id' })
   public mother: BelongsTo<typeof Dog>
 
-  @belongsTo(() => Dog)
+  @belongsTo(() => Dog, { foreignKey: 'father_id' })
   public father: BelongsTo<typeof Dog>
+
+  @hasMany(() => Dog)
+  public dogs: HasMany<typeof Dog>
 }

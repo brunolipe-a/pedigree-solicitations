@@ -1,8 +1,8 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
-import Role from 'App/Models/Role'
+import DogBreed from 'App/Models/DogBreed'
 
 export default class extends BaseSeeder {
   public async run() {
-    await Role.updateOrCreateMany('label', [{ label: 'Super Admin' }])
+    await DogBreed.updateOrCreateMany('name', [{ name: 'Vira-Lata' }])
   }
 }

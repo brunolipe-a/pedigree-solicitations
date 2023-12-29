@@ -17,6 +17,9 @@ export default class Kennel extends BaseModel {
   public name: string
 
   @column()
+  public registerCode: string
+
+  @column()
   public status: KennelStatus
 
   @column.dateTime({ autoCreate: true })

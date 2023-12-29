@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.integer('user_id').notNullable().unsigned().references('users.id').onDelete('CASCADE')
       table.string('cpf').notNullable().unique()
       table.string('phone').notNullable()
-      table.string('fullName').notNullable()
+      table.string('full_name').notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

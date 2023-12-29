@@ -30,6 +30,15 @@ export default class Dog extends BaseModel {
   public microchipNumber: string | null
 
   @column()
+  public motherId: number | null
+
+  @column()
+  public fatherId: number | null
+
+  @column()
+  public litterId: number | null
+
+  @column()
   public clientId: number
 
   @column()

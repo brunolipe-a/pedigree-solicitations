@@ -1,9 +1,13 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Dog from './Dog'
 
 export default class Pedigree extends BaseModel {
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public dogId: number
 
   @column()
   public dogRegisterCode: string
@@ -16,4 +20,7 @@ export default class Pedigree extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @belongsTo(() => Dog)
+  public dog: BelongsTo<typeof Dog>
 }
