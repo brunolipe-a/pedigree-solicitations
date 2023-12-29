@@ -14,6 +14,7 @@ export default class LitterPolicy extends BasePolicy {
   public async viewList(_user: User) {
     return false
   }
+
   public async view(user: User, litter: Litter) {
     await litter.load('father')
     await litter.load('mother')
@@ -46,12 +47,15 @@ export default class LitterPolicy extends BasePolicy {
       includesUserKennelId
     )
   }
+
   public async create(user: User) {
     return kennelRoles.includes(user.roleId)
   }
+
   public async update(_user: User, _litter: Litter) {
     return false
   }
+
   public async delete(_user: User, _litter: Litter) {
     return false
   }

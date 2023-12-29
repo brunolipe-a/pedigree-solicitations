@@ -59,4 +59,5 @@ export const { policies } = Bouncer.registerPolicies({
   DogPolicy: () => import('App/Policies/DogPolicy'),
   KennelPolicy: () => import('App/Policies/KennelPolicy'),
   LitterPolicy: () => import('App/Policies/LitterPolicy'),
+  PedigreePolicy: () => import('App/Policies/PedigreePolicy'),
 })

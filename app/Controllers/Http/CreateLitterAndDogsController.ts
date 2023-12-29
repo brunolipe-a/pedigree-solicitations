@@ -7,7 +7,9 @@ import StoreLitterAndDogValidator from 'App/Validators/StoreLitterAndDogValidato
 export default class CreateLitterAndDogsController {
   constructor(protected createLitterAndDogsService: CreateLitterAndDogsService) {}
 
-  public async handle({ request, response }: HttpContextContract) {
+  public async handle({ request, response, bouncer }: HttpContextContract) {
+    await bouncer.with('LitterPolicy').authorize('create')
+
     const data = await request.validate(StoreLitterAndDogValidator)
 
     const result = await this.createLitterAndDogsService.handle(data)

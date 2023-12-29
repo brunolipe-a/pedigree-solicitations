@@ -33,4 +33,10 @@ export default class KennelPolicy extends BasePolicy {
   public async delete(_user: User, _kennel: Kennel) {
     return false
   }
+
+  public async createUsers(user: User, kennel: Kennel) {
+    await user.load('kennels')
+
+    return user.roleId === RoleId.KENNEL_ADMIN && user.kennels[0].id === kennel.id
+  }
 }
