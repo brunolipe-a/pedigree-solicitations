@@ -1,15 +1,21 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'clients'
+  protected tableName = 'pedigree_solicitations'
 
   public async up() {
+    this.schema.raw('DROP TYPE IF EXISTS "pedigree_solicitation_status"')
+
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
-      table.integer('user_id').notNullable().unsigned().references('users.id').onDelete('CASCADE')
-      table.string('cpf').notNullable().unique()
-      table.string('phone').notNullable()
-      table.string('full_name').notNullable()
+      table.increments('id')
+      table.integer('dog_id').notNullable().unsigned().references('dogs.id')
+      table
+        .enu('status', ['PENDING', 'APPROVED', 'REPROVED'], {
+          useNative: true,
+          enumName: 'pedigree_solicitation_status',
+          existingType: false,
+        })
+        .defaultTo('PENDING')
       table.integer('kennel_id').unsigned().references('kennels.id').onDelete('SET NULL')
 
       /**
@@ -22,5 +28,6 @@ export default class extends BaseSchema {
 
   public async down() {
     this.schema.dropTable(this.tableName)
+    this.schema.raw('DROP TYPE IF EXISTS "pedigree_solicitation_status"')
   }
 }

@@ -18,7 +18,7 @@ export default class KennelPolicy extends BasePolicy {
 
     await user.load('kennels')
 
-    return user.kennels[0].id === kennel.id
+    return user.getKennelId() === kennel.id
   }
   public async create(_user: User) {
     return false
@@ -28,7 +28,7 @@ export default class KennelPolicy extends BasePolicy {
 
     await user.load('kennels')
 
-    return user.kennels[0].id === kennel.id
+    return user.getKennelId() === kennel.id
   }
   public async delete(_user: User, _kennel: Kennel) {
     return false
@@ -37,6 +37,6 @@ export default class KennelPolicy extends BasePolicy {
   public async createUsers(user: User, kennel: Kennel) {
     await user.load('kennels')
 
-    return user.roleId === RoleId.KENNEL_ADMIN && user.kennels[0].id === kennel.id
+    return user.roleId === RoleId.KENNEL_ADMIN && user.getKennelId() === kennel.id
   }
 }

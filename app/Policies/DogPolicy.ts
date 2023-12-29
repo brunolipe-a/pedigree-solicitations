@@ -20,7 +20,7 @@ export default class DogPolicy extends BasePolicy {
     if (kennelRoles.includes(user.roleId)) {
       await user.load('kennels')
 
-      return dog.kennelId === user.kennels[0].id
+      return dog.kennelId === user.getKennelId()
     }
 
     await user.load('client')
@@ -34,7 +34,7 @@ export default class DogPolicy extends BasePolicy {
     if (kennelRoles.includes(user.roleId)) {
       await user.load('kennels')
 
-      return dog.kennelId === user.kennels[0].id
+      return dog.kennelId === user.getKennelId()
     }
 
     await user.load('client')
@@ -48,6 +48,6 @@ export default class DogPolicy extends BasePolicy {
 
     await user.load('kennels')
 
-    return dog.kennelId === user.kennels[0].id
+    return dog.kennelId === user.getKennelId()
   }
 }

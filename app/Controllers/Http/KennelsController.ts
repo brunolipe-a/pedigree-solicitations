@@ -5,10 +5,10 @@ import StoreKennelValidator from 'App/Validators/StoreKennelValidator'
 import UpdateKennelValidator from 'App/Validators/UpdateKennelValidator'
 
 export default class KennelsController {
-  public async index({ bouncer }: HttpContextContract) {
+  public async index({ bouncer, auth }: HttpContextContract) {
     await bouncer.with('KennelPolicy').authorize('viewList')
 
-    const kennels = await Kennel.all()
+    const kennels = await Kennel.query().withScopes((s) => s.visibleTo(auth.user!))
 
     return kennels
   }

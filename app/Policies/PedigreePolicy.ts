@@ -13,17 +13,17 @@ export default class PedigreePolicy extends BasePolicy {
   }
 
   public async view(user: User, pedigree: Pedigree) {
-    await pedigree.load('dog')
-
     if (user.roleId === RoleId.CLIENT) {
       await user.load('client')
+
+      await pedigree.load('dog')
 
       return pedigree.dog.clientId === user.client.id
     }
 
     await user.load('kennels')
 
-    return pedigree.dog.kennelId === user.kennels[0].id
+    return pedigree.kennelId === user.getKennelId()
   }
 
   public async create(_user: User) {

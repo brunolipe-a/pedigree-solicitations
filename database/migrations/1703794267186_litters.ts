@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.integer('father_id').unsigned().references('dogs.id')
       table.text('description')
       table.timestamp('birth_at', { useTz: true }).notNullable()
+      table.integer('kennel_id').unsigned().references('kennels.id').onDelete('SET NULL')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

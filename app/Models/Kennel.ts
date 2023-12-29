@@ -1,7 +1,19 @@
 import { DateTime } from 'luxon'
-import { BaseModel, HasMany, ManyToMany, column, hasMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  HasMany,
+  ManyToMany,
+  ModelQueryBuilderContract,
+  column,
+  hasMany,
+  manyToMany,
+  scope,
+} from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Dog from './Dog'
+import { RoleId } from './Role'
+
+type Builder = ModelQueryBuilderContract<typeof Kennel>
 
 export enum KennelStatus {
   'PENDING' = 'PENDING',
@@ -33,4 +45,16 @@ export default class Kennel extends BaseModel {
 
   @hasMany(() => Dog)
   public dogs: HasMany<typeof Dog>
+
+  public static visibleTo = scope(async (query: Builder, user: User) => {
+    switch (user.roleId) {
+      case RoleId.KENNEL_EMPLOYEE:
+      case RoleId.KENNEL_ADMIN:
+        return query.whereHas('users', (q) => q.where('id', user.id))
+      case RoleId.SUPER_ADMIN:
+        return
+      default:
+        throw new Error(`${user.roleId} can not see the list of kennels`)
+    }
+  })
 }

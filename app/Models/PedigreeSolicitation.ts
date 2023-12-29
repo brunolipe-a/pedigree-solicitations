@@ -7,14 +7,20 @@ import {
   column,
   scope,
 } from '@ioc:Adonis/Lucid/Orm'
+import Kennel from './Kennel'
 import Dog from './Dog'
 import User from './User'
 import { RoleId } from './Role'
-import Kennel from './Kennel'
 
-type Builder = ModelQueryBuilderContract<typeof Pedigree>
+export enum PedigreeSolicitationStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REPROVED = 'REPROVED',
+}
 
-export default class Pedigree extends BaseModel {
+type Builder = ModelQueryBuilderContract<typeof PedigreeSolicitation>
+
+export default class PedigreeSolicitation extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
@@ -25,10 +31,7 @@ export default class Pedigree extends BaseModel {
   public kennelId: number
 
   @column()
-  public dogRegisterCode: string
-
-  @column()
-  public imagePath: string
+  public status: PedigreeSolicitationStatus
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -44,15 +47,13 @@ export default class Pedigree extends BaseModel {
 
   public static visibleTo = scope(async (query: Builder, user: User) => {
     switch (user.roleId) {
-      case RoleId.CLIENT:
-        return query.whereHas('dog', (q) => q.withScopes((s) => s.visibleTo(user)))
       case RoleId.KENNEL_EMPLOYEE:
       case RoleId.KENNEL_ADMIN:
         return query.whereHas('kennel', (q) => q.withScopes((s) => s.visibleTo(user)))
       case RoleId.SUPER_ADMIN:
         return
       default:
-        throw new Error(`${user.roleId} can not see the list of dogs`)
+        throw new Error(`${user.roleId} can not see the list of pedigree solicitations`)
     }
   })
 }

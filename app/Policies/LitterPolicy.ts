@@ -16,11 +16,11 @@ export default class LitterPolicy extends BasePolicy {
   }
 
   public async view(user: User, litter: Litter) {
-    await litter.load('father')
-    await litter.load('mother')
-
     if (user.roleId === RoleId.CLIENT) {
       await user.load('client')
+
+      await litter.load('father')
+      await litter.load('mother')
 
       const clientIds = await Dog.query().where('litter_id', litter.id).pluck<number>('client_id')
 
@@ -35,17 +35,7 @@ export default class LitterPolicy extends BasePolicy {
 
     await user.load('kennels')
 
-    const kennelIds = await Dog.query().where('litter_id', litter.id).pluck<number>('kennel_id')
-
-    const userKennelId = user.kennels[0].id
-
-    const includesUserKennelId = kennelIds.includes(userKennelId)
-
-    return (
-      litter.mother.kennelId === userKennelId ||
-      litter.father.kennelId === userKennelId ||
-      includesUserKennelId
-    )
+    return litter.kennelId === user.getKennelId()
   }
 
   public async create(user: User) {

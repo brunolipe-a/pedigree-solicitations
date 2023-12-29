@@ -12,6 +12,7 @@ export default class StoreClientValidator {
       rules.exists({ column: 'id', table: 'users' }),
       rules.unique({ column: 'user_id', table: 'clients' }),
     ]),
+    kennelId: schema.number.optional([rules.exists({ column: 'id', table: 'kennels' })]),
   })
 
   /**

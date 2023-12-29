@@ -1,13 +1,13 @@
 import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { PedigreeSolicitationStatus } from 'App/Models/PedigreeSolicitation'
 
-export default class StorePedigreeValidator {
+export default class UpdatePedigreeSolicitationValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    dogRegisterCode: schema.string([rules.maxLength(255)]),
-    dogId: schema.number([rules.exists({ column: 'id', table: 'dogs' })]),
-    kennelId: schema.number.optional([rules.exists({ column: 'id', table: 'kennels' })]),
+    status: schema.enum.optional(Object.values(PedigreeSolicitationStatus)),
+    dogId: schema.number.optional([rules.exists({ column: 'id', table: 'dogs' })]),
   })
 
   /**

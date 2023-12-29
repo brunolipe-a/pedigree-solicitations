@@ -6,10 +6,10 @@ import StoreClientValidator from 'App/Validators/StoreClientValidator'
 import UpdateClientValidator from 'App/Validators/UpdateClientValidator'
 
 export default class ClientsController {
-  public async index({ bouncer }: HttpContextContract) {
+  public async index({ bouncer, auth }: HttpContextContract) {
     await bouncer.with('ClientPolicy').authorize('viewList')
 
-    const clients = await Client.all()
+    const clients = await Client.query().withScopes((s) => s.visibleTo(auth.user!))
 
     return clients
   }

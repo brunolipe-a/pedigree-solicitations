@@ -1,21 +1,13 @@
 import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { RoleId } from 'App/Models/Role'
+import { PedigreeSolicitationStatus } from 'App/Models/PedigreeSolicitation'
 
-export default class RegisterUserValidator {
+export default class StorePedigreeSolicitationValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    name: schema.string([rules.maxLength(255)]),
-    email: schema.string([
-      rules.email(),
-      rules.unique({ column: 'email', table: 'users' }),
-      rules.maxLength(255),
-    ]),
-    cpf: schema.string([rules.maxLength(255), rules.unique({ column: 'cpf', table: 'clients' })]),
-    phone: schema.string([rules.maxLength(255)]),
-    roleId: schema.enum(Object.values(RoleId)),
-    password: schema.string([rules.confirmed(), rules.maxLength(180), rules.minLength(8)]),
+    status: schema.enum(Object.values(PedigreeSolicitationStatus)),
+    dogId: schema.number([rules.exists({ column: 'id', table: 'dogs' })]),
     kennelId: schema.number.optional([rules.exists({ column: 'id', table: 'kennels' })]),
   })
 

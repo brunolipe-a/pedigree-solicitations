@@ -6,10 +6,10 @@ import StoreDogValidator from 'App/Validators/StoreDogValidator'
 import UpdateDogValidator from 'App/Validators/UpdateDogValidator'
 
 export default class DogsController {
-  public async index({ bouncer }: HttpContextContract) {
+  public async index({ bouncer, auth }: HttpContextContract) {
     await bouncer.with('DogPolicy').authorize('viewList')
 
-    const dogs = await Dog.all()
+    const dogs = await Dog.query().withScopes((s) => s.visibleTo(auth.user!))
 
     return dogs
   }

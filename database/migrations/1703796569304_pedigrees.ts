@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.integer('dog_id').notNullable().unsigned().references('dogs.id')
       table.string('dog_register_code').notNullable()
       table.string('image_path').notNullable()
+      table.integer('kennel_id').unsigned().references('kennels.id').onDelete('SET NULL')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

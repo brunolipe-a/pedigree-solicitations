@@ -20,6 +20,7 @@ export default class StoreLitterValidator {
       rules.exists({ column: 'id', table: 'dogs' }),
       rules.notIn([this.refs.motherId.value]),
     ]),
+    kennelId: schema.number.optional([rules.exists({ column: 'id', table: 'kennels' })]),
   })
 
   /**

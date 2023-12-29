@@ -1,9 +1,20 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  ModelQueryBuilderContract,
+  belongsTo,
+  column,
+  scope,
+} from '@ioc:Adonis/Lucid/Orm'
 import Kennel from './Kennel'
 import DogBreed from './DogBreed'
 import Client from './Client'
 import Litter from './Litter'
+import { RoleId } from './Role'
+import User from './User'
+
+type Builder = ModelQueryBuilderContract<typeof Dog>
 
 export enum Sex {
   MALE = 'MALE',
@@ -70,4 +81,18 @@ export default class Dog extends BaseModel {
 
   @belongsTo(() => Litter)
   public litter: BelongsTo<typeof Litter>
+
+  public static visibleTo = scope(async (query: Builder, user: User) => {
+    switch (user.roleId) {
+      case RoleId.CLIENT:
+        return query.whereHas('client', (q) => q.where('user_id', user.id))
+      case RoleId.KENNEL_EMPLOYEE:
+      case RoleId.KENNEL_ADMIN:
+        return query.whereHas('kennel', (q) => q.whereHas('users', (q) => q.where('id', user.id)))
+      case RoleId.SUPER_ADMIN:
+        return
+      default:
+        throw new Error(`${user.roleId} can not see the list of dogs`)
+    }
+  })
 }

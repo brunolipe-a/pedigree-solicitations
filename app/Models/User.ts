@@ -55,4 +55,8 @@ export default class User extends BaseModel {
       user.password = await Hash.make(user.password)
     }
   }
+
+  public getKennelId() {
+    return this.kennels[0].id
+  }
 }

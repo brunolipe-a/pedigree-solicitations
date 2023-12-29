@@ -6,10 +6,10 @@ import StorePedigreeValidator from 'App/Validators/StorePedigreeValidator'
 import UpdatePedigreeValidator from 'App/Validators/UpdatePedigreeValidator'
 
 export default class PedigreesController {
-  public async index({ bouncer }: HttpContextContract) {
+  public async index({ bouncer, auth }: HttpContextContract) {
     await bouncer.with('PedigreePolicy').authorize('viewList')
 
-    const pedigrees = await Pedigree.all()
+    const pedigrees = await Pedigree.query().withScopes((s) => s.visibleTo(auth.user!))
 
     return pedigrees
   }

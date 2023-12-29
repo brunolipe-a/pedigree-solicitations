@@ -6,10 +6,10 @@ import StoreLitterValidator from 'App/Validators/StoreLitterValidator'
 import UpdateLitterValidator from 'App/Validators/UpdateLitterValidator'
 
 export default class LittersController {
-  public async index({ bouncer }: HttpContextContract) {
+  public async index({ bouncer, auth }: HttpContextContract) {
     await bouncer.with('LitterPolicy').authorize('viewList')
 
-    const litters = await Litter.all()
+    const litters = await Litter.query().withScopes((s) => s.visibleTo(auth.user!))
 
     return litters
   }
