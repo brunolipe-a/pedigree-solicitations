@@ -1,4 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Client from 'App/Models/Client'
+import { RoleId } from 'App/Models/Role'
 import User from 'App/Models/User'
 import LoginValidator from 'App/Validators/LoginValidator'
 import RegisterUserValidator from 'App/Validators/RegisterUserValidator'
@@ -21,13 +23,19 @@ export default class SessionsController {
 
     const user = await User.create({ name, email, password, roleId })
 
-    const client = await user.related('client').create({ ...rest, fullName: name })
+    let client: Client | undefined
+
+    if (roleId === RoleId.CLIENT) {
+      client = await user.related('client').create({ ...rest, fullName: name })
+    }
 
     return response.created({ user, client })
   }
 
   public async me({ auth }: HttpContextContract) {
-    const user = auth.user?.load('client')
+    const user = auth.user!
+
+    await user.load('client')
 
     return user
   }
